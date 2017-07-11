@@ -1,10 +1,10 @@
 ///////		整个桌面的右键菜单	///////
 (function(){
-	var menu = document.querySelector('#conTextMenu');
+	var menu = document.querySelector('.conTextMenu');
 	document.addEventListener('contextmenu',function(e) {
 		showContextMenu(e,data.menu.deskMenu,menu);
 		//	移入时二级菜单创建并显示
-		var menus = document.querySelectorAll('#conTextMenu>li');
+		var menus = document.querySelectorAll('.conTextMenu>li');
 		for(var i=0;i<data.menu.deskMenu.length;i++) {
 			var hasSecond = data.menu.deskMenu[i].child;
 			if(hasSecond) {
@@ -60,7 +60,7 @@
 	}
 	//	设置右键菜单内容数据
 	function showContextMenu(e,menuData,which) {
-		var menu = document.querySelector('#conTextMenu');
+		var menu = document.querySelector('.conTextMenu');
 		e.preventDefault();
 		menu.style.display = 'block';
 		menu.innerHTML = '';
@@ -69,13 +69,8 @@
 		menuData.forEach(function(item,index) {
 			var li = document.createElement('li');
 			var p = document.createElement('p');
-			var label = document.createElement('label');
 			li.onmousedown = contextmenuCallback[item.callBackName];
-			if(index == 3) {
-				li.innerHTML = `<p><label for="fileBtn" style="display: block;">${item.name}</label></p>`;
-			} else {
-				li.innerHTML = `<p>${item.name}</p>`;
-			}
+			li.innerHTML = `<p>${item.name}</p>`;
 			which.appendChild(li);
 		});
 		resetOffset(menu);
@@ -108,7 +103,7 @@ var contextmenuCallback = {
 		changeBg();
 	},
 	uploadFile:function() {
-		uploadFile();
+		fileBtn.click();
 	}
 }
 
@@ -124,8 +119,10 @@ var contextmenuCallback = {
 		}
 	});
 //	文件上传
+var fileBtn = document.querySelector('#fileBtn');
+fileBtn.onclick = uploadFile;
 function uploadFile(){
-	var fileBtn = document.querySelector('#fileBtn');
+	menu.style.display = "none";
 	fileBtn.addEventListener('change',function(e) {
 		var file = this.files[0];
 		var fileType = file.type.split("/")[0]; 
@@ -241,7 +238,7 @@ function openFile(file,fileType) {
 	}
 	//	给创建出来的文件夹添加事件
 	function setEv(file,fileDetails,fileType) {
-		var subMenu = document.querySelector('#subMenu');
+		var subMenu = document.querySelector('.subMenu');
 		var fileEls = files.getElementsByClassName('file');
 		var timer;
 		file.child= [];
@@ -334,7 +331,7 @@ function openFile(file,fileType) {
 				files.removeChild(file);
 				resetOffset();
 			};
-			document.querySelector('#conTextMenu').style.display = "none";
+			document.querySelector('.conTextMenu').style.display = "none";
 		});
 		//	桌面元素的拖拽删除
 		var trash = document.querySelector('#trash');
@@ -421,10 +418,10 @@ function openFile(file,fileType) {
 	
 	///	点击关闭右键菜单
 document.addEventListener('contextmenu', function(e) {
-	document.querySelector('#subMenu').style.display = "none";
+	document.querySelector('.subMenu').style.display = "none";
 });
 document.addEventListener('click', function(e) {
-	document.querySelector('#subMenu').style.display = "none";
+	document.querySelector('.subMenu').style.display = "none";
 });
 /////	文件排序	/////
 	//	字母排序
@@ -665,8 +662,8 @@ function cancelActive() {
 
 ///////		框选		///////
 (function() {
-	var subMenu = document.querySelector('#subMenu');
-	var contextmenu = document.querySelector('#conTextMenu');
+	var subMenu = document.querySelector('.subMenu');
+	var contextmenu = document.querySelector('.conTextMenu');
 	//	阻止冒泡
 	subMenu.addEventListener('mousedown', function(e) {
 		e.stopPropagation();

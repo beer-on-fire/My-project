@@ -23,8 +23,8 @@ ul {
 	z-index:-999;
 }
 
-#subMenu,
-#conTextMenu {
+.subMenu,
+.conTextMenu {
 	display:none;
 	position:fixed;
 	left:50px;
@@ -34,24 +34,21 @@ ul {
 	text-indent: 15px;
 	color:#fff;
 	background: rgba(0,0,0,0.5);
+	box-shadow: 3px 3px 3px #000;
 }
-#subMenu,
-#conTextMenu li:hover {
-	background:indianred;
-}
-#subMenu li {
+.subMenu li {
 	position: relative;
 	font: 14px/28px "宋体";
 	border-bottom: 1px solid #eee;
 	padding: 0 10px;
 }
-#conTextMenu li {
+.conTextMenu li {
 	position: relative;
 	font: 14px/28px "宋体";
 	border-bottom: 1px solid #eee;
 	padding: 0 10px;
 }
-#conTextMenu ul {
+.conTextMenu ul {
 	display: none;
 	position: absolute;
 	left: 150px;
@@ -59,6 +56,9 @@ ul {
 	width: 130px;
 	padding:5px 5px;
 	background: rgba(0,0,0,0.6);
+}
+.menuActive  {
+	background:indianred;
 }
 #files {
 	position: fixed;
