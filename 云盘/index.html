@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="css/index.css"/>
+<title></title>
+</head>
+<body>
+<div id="bg"></div>
+<div id="nameTxt">
+    <input type="text" id="filename">
+    <select id="filetype">
+        <option value="floder">文件夹</option>
+        <option value="txt">文本</option>
+        <option value="html">网页</option>
+        <option value="excel">Excel</option>
+        <option value="contact">联系人</option>
+    </select>
+    <button type="button" id="createBtn">创建</button>
+</div>
+<div id="paths">
+    <a href="javascript:;" id="back">返回上一级</a>
+    <span class="line"> | </span>
+    <ul id="crumbs"></ul>
+</div>
+<ul id="list"></ul>
+<ul class="conTextMenu"></ul>
+<input type="file" id="fileBtn" style="display: none;">
+</body>
+<!-- <script src="js/m.touchTap.js" type="text/javascript"></script> -->
+<!-- 存放数据 -->
+<script src="js/data.js" type="text/javascript"></script>
+<!-- 操作数据-只操作数据 -->
+<script src="js/model.js"></script>
+<!-- 要复用的函数部分 -->
+<script src="js/function.js" type="text/javascript"></script>
+<!-- 业务逻辑部分 -->
+<script src="js/index.js" type="text/javascript"></script>
+</html>
