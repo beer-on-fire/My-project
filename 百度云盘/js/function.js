@@ -68,7 +68,6 @@ function view(pid) {
 	_ID = pid;
 
 	var dataList = getChildren(_ID);
-
 	element.list.innerHTML = '';
 	dataList.forEach(function(item) {
 			var newname = item.name;
@@ -76,41 +75,81 @@ function view(pid) {
 					newname += `(${item.extname})`;
 			}
 	    var li = document.createElement('li');
-			var figure = document.createElement('figure')
+			var figure = document.createElement('figure');
 			var div = document.createElement('div');
 			var p = document.createElement('p');
 			var input = document.createElement('input');
+			var chose = document.createElement('input');
 	    figure.className = item.type;
 			p.innerHTML = newname;
 			input.type = 'text';
+			chose.type = 'checkbox';
+			chose.style.display = 'none';
 			input.style.display = 'none';
 			div.appendChild(p);
 			div.appendChild(input);
 			li.appendChild(figure);
+			li.appendChild(chose);
 			li.appendChild(div);
 			li.item = item;
-			li.onclick = function() {
-				var lis = this.parentNode.children;
-				if(this.className == '') {
-						for(var i=0;i<lis.length;i++) {
-							lis[i].className = '';
-						}
-						this.className = 'liActive';
-				} else {
-						this.className = '';
-				}
-				selectedLi = this;
+			li.onmouseover = function() {
+					var lis = this.parentNode.children;
+					chose.style.display = 'block';
+					this.classList.add('liHover');
 			}
-			li.ondblclick = function(e) {
-				if(item.type == 'floder'||item.type == 'excel'||item.type == 'html') {
-					view(item.id);
-					back.style.display = 'inline-block';
-					line.style.display = 'inline-block';
+			li.onmouseout = function() {
+				this.classList.remove('liHover');
+				if(this.className == 'liActive') {
+					chose.style.display = 'block';
 				} else {
-					openMedia(item.newClass,item.type);
+					chose.style.display = 'none';
 				}
+			}
+			chose.onchange = function() {
+					selectedLi = this.parentNode;
+			}
+			chose.addEventListener('click',function(e) {
+				e.stopPropagation();
+			});
+			li.onclick = function(e) {
+					if(item.type == 'floder'||item.type == 'excel'||item.type == 'html') {
+						view(item.id);
+						back.style.display = 'inline-block';
+						line.style.display = 'inline-block';
+					} else {
+						openMedia(item.newClass,item.type);
+					}
 			}
 	    element.list.appendChild(li);
+			///	勾选部分
+			var chosen = element.list.querySelectorAll('input[type="checkbox"]');
+			chosenX = chosen;
+			chosenX.forEach(function(val) {
+					// console.log(chosenX.classList);
+				val.onchange = function() {
+					console.log(val)
+					this.parentNode.classList.add('liActive');
+					var nub = 0;
+					var isAll = false;
+					if(!this.checked) {
+						this.parentNode.classList.remove('liActive');
+					}
+					//	全选
+					for(var i=0;i<chosenX.length;i++) {
+							if(chosenX[i].checked) {
+								nub++;
+							}
+					}
+					isAll = nub == chosenX.length?true:false;
+					choseAll.checked = isAll;
+					hasChosen.innerHTML = nub;
+					if(nub == 0) {
+						hasChosen.parentNode.style.display = 'none';
+					} else {
+						hasChosen.parentNode.style.display = 'block';
+					}
+				}
+			})
 	});
 /**
  * 导航列表
@@ -143,7 +182,6 @@ function view(pid) {
 	});
 	//	当前所在的目录,且无法点击
 	var info = getInfo(_ID);
-	// console.log(info);
 	if(info) {
 		var li = document.createElement('li');
 		//	路径补全后缀名
@@ -220,7 +258,7 @@ var timer;
 function rename(which) {
 	if(which) {
 		var p = which.querySelector('p');
-		var input = which.querySelector('input');
+		var input = which.querySelectorAll('input')[1];
 		setTimeout(function(){
 			input.select();
 		});
@@ -251,10 +289,4 @@ function rename(which) {
 			e.stopPropagation();
 		});
 	}
-}
-
-//	打开进入新的界面
-function createWrap() {
-		var wrapTop = document.createElement('p');
-		var wrapCon = document.createElement('div');
 }

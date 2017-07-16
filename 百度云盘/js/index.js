@@ -19,7 +19,10 @@ var element = {
 		nameRight:document.querySelector('#nameRight'),
 		nameWrong:document.querySelector('#nameWrong'),
 		regesiter:document.querySelector('#regesiter'),
-		logIn:document.querySelector('logIn')
+		logIn:document.querySelector('#logIn'),
+		choseAll:document.querySelector('#choseAll'),
+		hasChosen:document.querySelector('#hasChosen')
+
 }
 //	右键菜单
 document.addEventListener('contextmenu',function(e) {
@@ -33,16 +36,21 @@ document.addEventListener('contextmenu',function(e) {
 				//	右键的那个文件夹选中
 				var lis = list.children;
 				for(var i=0;i<lis.length;i++) {
-					lis[i].className = ''
+					lis[i].classList.remove('liActive');
+					lis[i].children[1].checked = false;
+					lis[i].children[1].style.display = 'none';
 				}
 				if(e.target.tagName.toUpperCase() == 'LI') {
-						e.target.className = 'liActive'
+						e.target.classList.add('liActive');
+						e.target.children[1].checked = true;
 						rightLi = e.target;
 				} else if (e.target.parentNode.tagName.toUpperCase() == 'LI') {
-						e.target.parentNode.className = 'liActive'
+						e.target.parentNode.classList.add('liActive');
+						e.target.parentNode.children[1].checked = true;
 						rightLi = e.target.parentNode;
 				} else if(e.target.parentNode.parentNode.tagName.toUpperCase() == 'LI') {
-						e.target.parentNode.parentNode.className = 'liActive'
+						e.target.parentNode.parentNode.classList.add('liActive');
+						e.target.parentNode.parentNode.children[1].checked =
 						rightLi = e.target.parentNode.parentNode;
 				}
 		} else {
@@ -278,6 +286,8 @@ element.nameRight.onclick = function() {
 			name: element.filename.value
 		});
 		view(_ID);
+		console.log(chosenX);
+		choseAll.checked = false;
 }
 element.nameWrong.onclick = function() {
 		element.filename.value == '';
@@ -290,8 +300,18 @@ renameBtn.onclick = function() {
 // 上传文件
 uploadFileBtn.onmousedown = contextmenuCallback.uploadFile;
 //	排序按钮
+var timer;
 sortBtn.onmouseover = function() {
 	sortMenu.style.display = 'block';
+}
+sortMenu.onmouseover = function() {
+	clearTimeout(timer);
+	sortMenu.style.display = 'block';
+}
+sortBtn.onmouseout = function() {
+	timer = setTimeout(function(){
+		sortMenu.style.display = 'none';
+	},300)
 }
 sortMenu.onmouseleave = function() {
 	sortMenu.style.display = 'none';
@@ -299,3 +319,19 @@ sortMenu.onmouseleave = function() {
 sortMenu.children[0].onclick = contextmenuCallback.nameSort;
 sortMenu.children[1].onclick = contextmenuCallback.timeSortB;
 sortMenu.children[2].onclick = contextmenuCallback.typeSort;
+
+//	全选
+var nub=0;
+var chosenX;
+choseAll.onchange = function() {
+	// console.log(chosenX);
+		var lis = list.children;
+		for(var i=0;i<chosenX.length;i++) {
+			chosenX[i].checked = this.checked;
+			chosenX[i].style.display = this.checked?'block':'none';
+			lis[i].className = this.checked?'liActive':'';
+			nub = this.checked?chosenX.length:0;
+			hasChosen.parentNode.style.display = this.checked?'block':'none';
+			hasChosen.innerHTML = nub;
+		}
+}
