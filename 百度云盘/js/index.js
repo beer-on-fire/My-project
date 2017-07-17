@@ -21,8 +21,10 @@ var element = {
 		regesiter:document.querySelector('#regesiter'),
 		logIn:document.querySelector('#logIn'),
 		choseAll:document.querySelector('#choseAll'),
-		hasChosen:document.querySelector('#hasChosen')
-
+		hasChosen:document.querySelector('#hasChosen'),
+		mask:document.querySelector('#mask'),
+		sure:document.querySelector('#sure'),
+		cancel:document.querySelector('#cancel')
 }
 //	右键菜单
 document.addEventListener('contextmenu',function(e) {
@@ -295,6 +297,7 @@ element.nameWrong.onclick = function() {
 }
 //	重命名
 renameBtn.onclick = function() {
+	console.log(selectedLi);
 	rename(selectedLi);
 }
 // 上传文件
@@ -320,6 +323,14 @@ sortMenu.children[0].onclick = contextmenuCallback.nameSort;
 sortMenu.children[1].onclick = contextmenuCallback.timeSortB;
 sortMenu.children[2].onclick = contextmenuCallback.typeSort;
 
+
+//	遮罩层关闭
+sure.onclick = function() {
+
+}
+cancel.onclick = function() {
+	mask.style.display = 'none'
+}
 //	全选
 var nub=0;
 var chosenX;

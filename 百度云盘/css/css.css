@@ -530,3 +530,42 @@ ul {
 	margin: 30px auto;
 	display: block;
 }
+
+/*遮罩层*/
+#mask {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0.3);
+	z-index:9999;
+	display:none;
+}
+#info {
+	width:520px;
+	height:162px;
+	background:url(../img/cloud/info.png) no-repeat;
+	position: absolute;
+	top:50%;
+	left:50%;
+	margin:-81px 0 0 -260px;
+}
+#sure {
+	width:156px;
+	height:34px;
+	border:none;
+	background: url(../img/cloud/sure.png) no-repeat;
+	position:absolute;
+	bottom:15px;
+	left:125px;
+}
+#cancel {
+	width:104px;
+	height:34px;
+	border:none;
+	background: url(../img/cloud/cancel.png) no-repeat;
+	position:absolute;
+	bottom:15px;
+	left:291px;
+}

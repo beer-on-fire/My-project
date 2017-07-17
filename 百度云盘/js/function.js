@@ -105,9 +105,6 @@ function view(pid) {
 					chose.style.display = 'none';
 				}
 			}
-			chose.onchange = function() {
-					selectedLi = this.parentNode;
-			}
 			chose.addEventListener('click',function(e) {
 				e.stopPropagation();
 			});
@@ -127,7 +124,7 @@ function view(pid) {
 			chosenX.forEach(function(val) {
 					// console.log(chosenX.classList);
 				val.onchange = function() {
-					console.log(val)
+					selectedLi = this.parentNode;
 					this.parentNode.classList.add('liActive');
 					var nub = 0;
 					var isAll = false;
@@ -262,30 +259,75 @@ function rename(which) {
 		setTimeout(function(){
 			input.select();
 		});
-		input.value = p.innerHTML;
 		p.style.display = 'none';
 		input.style.display = 'block';
-		input.onblur = function() {
-				which.item.name = input.value;
-				//	重名
-				var existFiles = checkName(which.item);
-				if(existFiles.length == 1) {
-					which.item.name = input.value;
-				} else if(existFiles.length > 1) {
-					//不包括自身，所以从1开始
-					alert('重名了，请重新输入');
-					clearTimeout(timer)
-					timer = setTimeout(function(){
-						input.select();
-						input.focus();
-					},300);
-					return;
-					which.item.name = p.innerHTML;
-			  }
-				view(_ID);
+		input.value = p.innerHTML;
+		//	将同种类的，同一个文件夹的放进一个数组
+		var ext = data.list;
+		ext = ext.filter(function(item) {
+				if(item.pid == _ID && item.type == which.item.type) {
+					return true
+				} else {
+					return false
+				}
+		});
+		//	将同类的文件所有名字放进一个数组，并拼接成完整名字，不再分为extname和name
+		var names = [];
+		for(var i=0;i<ext.length;i++) {
+			if(ext[i].extname) {
+				names.push(ext[i].name + '(' + ext[i].extname + ')')
+			} else {
+				names.push(ext[i].name);
+			}
 		};
+		console.log(which.item.name,names);
+		input.onblur = function() {
+				//	重名
+				if(hasName()){
+					element.mask.style.display = 'block'
+				}
+				else if(input.value == ''||input.value == p.innerHTML) {
+					view(_ID)
+				}
+				else if(which.item.extname) {
+
+					//	如果修改的文件原本就存在后缀名
+					/**
+					 * a 表示'(' 在名字字符串中出现的位置
+					 * b 表示')' 在名字字符串中出现的位置
+					 * c 表示 替换后的extname
+					 * d 表示 替换后的name
+					 */
+					var a,b,c,d;
+					a = input.value.lastIndexOf('(');
+					b = input.value.lastIndexOf(')');
+					c = input.value.slice(a+1,b);
+					d = input.value.slice(0,a);
+					if(a == -1 || b == -1||c.length == 0) {
+							which.item.name = input.value
+							which.item.extname = null;
+					} else {
+							which.item.name = d;
+							which.item.extname = c;
+					}
+					p.style.display = 'block';
+					input.style.display = 'none';
+					view(_ID)
+				} else {
+					which.item.name = input.value
+					view(_ID)
+				}
+		};
+		function hasName() {
+			for(var i=0;i< names.length;i++) {
+				if(input.value == names[i] && p.innerHTML != names[i]) {
+					return true;
+				}
+			}
+			return false
+		}
 		//阻止冒泡
-		input.addEventListener('dblclick',function(e) {
+		input.addEventListener('click',function(e) {
 			e.stopPropagation();
 		});
 	}
