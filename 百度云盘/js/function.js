@@ -66,7 +66,13 @@ function view(pid) {
 	//	只要调用view方法，就把_ID设置成我们要的view的pid
 	//	记录_ID的值，以便其他地方的使用，记录当view过后，当前所在的目录的id
 	_ID = pid;
-
+	if(_ID <= 0) {
+		back.style.display = 'none';
+		line.style.display = 'none';
+	} else {
+		back.style.display = 'inline-block';
+		line.style.display = 'inline-block';
+	}
 	var dataList = getChildren(_ID);
 	element.list.innerHTML = '';
 	dataList.forEach(function(item) {
@@ -79,40 +85,43 @@ function view(pid) {
 			var div = document.createElement('div');
 			var p = document.createElement('p');
 			var input = document.createElement('input');
+			var label = document.createElement('label');
 			var chose = document.createElement('input');
 	    figure.className = item.type;
 			p.innerHTML = newname;
 			input.type = 'text';
+
 			chose.type = 'checkbox';
-			chose.style.display = 'none';
+			label.style.display = 'none';
+			// chose.style.display = 'none';
 			input.style.display = 'none';
 			div.appendChild(p);
 			div.appendChild(input);
 			li.appendChild(figure);
-			li.appendChild(chose);
+			li.appendChild(label);
+			label.appendChild(chose);
 			li.appendChild(div);
 			li.item = item;
 			li.onmouseover = function() {
 					var lis = this.parentNode.children;
-					chose.style.display = 'block';
+					label.style.display = 'block';
 					this.classList.add('liHover');
 			}
 			li.onmouseout = function() {
 				this.classList.remove('liHover');
 				if(this.className == 'liActive') {
-					chose.style.display = 'block';
+					label.style.display = 'block';
 				} else {
-					chose.style.display = 'none';
+					label.style.display = 'none';
 				}
 			}
-			chose.addEventListener('click',function(e) {
+			label.addEventListener('click',function(e) {
 				e.stopPropagation();
 			});
 			li.onclick = function(e) {
+					hasChosen.parentNode.style.display = 'none';
 					if(item.type == 'floder'||item.type == 'excel'||item.type == 'html') {
 						view(item.id);
-						back.style.display = 'inline-block';
-						line.style.display = 'inline-block';
 					} else {
 						openMedia(item.newClass,item.type);
 					}
@@ -122,14 +131,13 @@ function view(pid) {
 			var chosen = element.list.querySelectorAll('input[type="checkbox"]');
 			chosenX = chosen;
 			chosenX.forEach(function(val) {
-					// console.log(chosenX.classList);
 				val.onchange = function() {
-					selectedLi = this.parentNode;
-					this.parentNode.classList.add('liActive');
+					selectedLi = this.parentNode.parentNode;
+					this.parentNode.parentNode.classList.add('liActive');
 					var nub = 0;
 					var isAll = false;
 					if(!this.checked) {
-						this.parentNode.classList.remove('liActive');
+						this.parentNode.parentNode.classList.remove('liActive');
 					}
 					//	全选
 					for(var i=0;i<chosenX.length;i++) {
@@ -226,7 +234,7 @@ function openMedia(file,fileType) {
 			else if (fileType == 'image') {
 				var img = new Image();
 				img.src = result;
-				fileDrtailsC.appendChild(img);
+				fileDetailsC.appendChild(img);
 			}
 			else if (fileType == 'video') {
 				var video = document.createElement('video');
@@ -280,7 +288,6 @@ function rename(which) {
 				names.push(ext[i].name);
 			}
 		};
-		console.log(which.item.name,names);
 		input.onblur = function() {
 				//	重名
 				if(hasName()){
@@ -318,6 +325,19 @@ function rename(which) {
 					view(_ID)
 				}
 		};
+
+		//	遮罩层关闭
+		sure.onclick = function() {
+			console.log(1);
+			mask.style.display = 'none';
+			selectedLi = rightLi
+			rename(selectedLi)
+		}
+		turnOff.onclick = cancel.onclick = function() {
+			mask.style.display = 'none';
+			input.style.display = 'none';
+			p.style.display = 'block';
+		}
 		function hasName() {
 			for(var i=0;i< names.length;i++) {
 				if(input.value == names[i] && p.innerHTML != names[i]) {
@@ -327,6 +347,7 @@ function rename(which) {
 			return false
 		}
 		//阻止冒泡
+
 		input.addEventListener('click',function(e) {
 			e.stopPropagation();
 		});

@@ -24,7 +24,9 @@ var element = {
 		hasChosen:document.querySelector('#hasChosen'),
 		mask:document.querySelector('#mask'),
 		sure:document.querySelector('#sure'),
-		cancel:document.querySelector('#cancel')
+		cancel:document.querySelector('#cancel'),
+		turnOff:document.querySelector('#turnOff'),
+		trash:document.querySelector('#trash')
 }
 //	右键菜单
 document.addEventListener('contextmenu',function(e) {
@@ -39,21 +41,31 @@ document.addEventListener('contextmenu',function(e) {
 				var lis = list.children;
 				for(var i=0;i<lis.length;i++) {
 					lis[i].classList.remove('liActive');
-					lis[i].children[1].checked = false;
+					choseAll.checked = false;
+					lis[i].children[1].children[0].checked = false;
 					lis[i].children[1].style.display = 'none';
 				}
 				if(e.target.tagName.toUpperCase() == 'LI') {
 						e.target.classList.add('liActive');
 						e.target.children[1].checked = true;
-						rightLi = e.target;
+						selectedLi = rightLi = e.target;
 				} else if (e.target.parentNode.tagName.toUpperCase() == 'LI') {
 						e.target.parentNode.classList.add('liActive');
 						e.target.parentNode.children[1].checked = true;
-						rightLi = e.target.parentNode;
+						selectedLi = rightLi = e.target.parentNode;
 				} else if(e.target.parentNode.parentNode.tagName.toUpperCase() == 'LI') {
 						e.target.parentNode.parentNode.classList.add('liActive');
 						e.target.parentNode.parentNode.children[1].checked =
-						rightLi = e.target.parentNode.parentNode;
+						selectedLi = rightLi = e.target.parentNode.parentNode;
+				}
+				if(rightLi) {
+					if(!rightLi.nextSibling) {
+						choseAll.checked = true;
+					} else {
+						rightLi.children[1].children[0].checked = true;
+					}
+					hasChosen.parentNode.style.display = 'block';
+					hasChosen.innerHTML = 1;
 				}
 		} else {
 				showContextMenu(element.menu,data.menu.deskMenu);
@@ -70,6 +82,10 @@ document.onmousedown = function() {
 	nameChosen.style.display = 'none';
 }
 nameChosen.addEventListener('mousedown',function(e) {
+	e.stopPropagation();
+});
+mask.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
 	e.stopPropagation();
 })
 //	窗口大小变化时调整menu位置
@@ -323,14 +339,6 @@ sortMenu.children[0].onclick = contextmenuCallback.nameSort;
 sortMenu.children[1].onclick = contextmenuCallback.timeSortB;
 sortMenu.children[2].onclick = contextmenuCallback.typeSort;
 
-
-//	遮罩层关闭
-sure.onclick = function() {
-
-}
-cancel.onclick = function() {
-	mask.style.display = 'none'
-}
 //	全选
 var nub=0;
 var chosenX;
@@ -339,10 +347,15 @@ choseAll.onchange = function() {
 		var lis = list.children;
 		for(var i=0;i<chosenX.length;i++) {
 			chosenX[i].checked = this.checked;
-			chosenX[i].style.display = this.checked?'block':'none';
+			chosenX[i].parentNode.style.display = this.checked?'block':'none';
 			lis[i].className = this.checked?'liActive':'';
 			nub = this.checked?chosenX.length:0;
 			hasChosen.parentNode.style.display = this.checked?'block':'none';
 			hasChosen.innerHTML = nub;
 		}
+}
+
+//	垃圾箱
+trash.onclick = function() {
+	view(-1)
 }
