@@ -90,10 +90,8 @@ function view(pid) {
 	    figure.className = item.type;
 			p.innerHTML = newname;
 			input.type = 'text';
-
 			chose.type = 'checkbox';
 			label.style.display = 'none';
-			// chose.style.display = 'none';
 			input.style.display = 'none';
 			div.appendChild(p);
 			div.appendChild(input);
@@ -115,9 +113,6 @@ function view(pid) {
 					label.style.display = 'none';
 				}
 			}
-			label.addEventListener('click',function(e) {
-				e.stopPropagation();
-			});
 			li.onclick = function(e) {
 					hasChosen.parentNode.style.display = 'none';
 					if(item.type == 'floder'||item.type == 'excel'||item.type == 'html') {
@@ -127,6 +122,18 @@ function view(pid) {
 					}
 			}
 	    element.list.appendChild(li);
+			li.addEventListener('mousemove',function(e) {
+				e.stopPropagation();
+			});
+			li.addEventListener('mousedown',function(e) {
+				e.stopPropagation();
+			});
+			label.addEventListener('click',function(e) {
+				e.stopPropagation();
+			});
+			label.addEventListener('mousedown',function(e) {
+				e.stopPropagation();
+			});
 			///	勾选部分
 			var chosen = element.list.querySelectorAll('input[type="checkbox"]');
 			chosenX = chosen;
@@ -149,13 +156,14 @@ function view(pid) {
 					choseAll.checked = isAll;
 					hasChosen.innerHTML = nub;
 					if(nub == 0) {
-						hasChosen.parentNode.style.display = 'none';
+						hideFileBar();
 					} else {
-						hasChosen.parentNode.style.display = 'block';
+						showFileBar();
 					}
 				}
 			})
 	});
+
 /**
  * 导航列表
  *由三个部分组成：顶层+所有父级+当前目录
@@ -347,9 +355,34 @@ function rename(which) {
 			return false
 		}
 		//阻止冒泡
-
 		input.addEventListener('click',function(e) {
 			e.stopPropagation();
 		});
 	}
+}
+//	文件显示控制条
+function showFileBar() {
+hasChosen.parentNode.style.display = 'block';
+	myDevice.style.display = 'none';
+	offlineBtn.style.display = 'none';
+	fileBar.style.display = 'block';
+}
+function hideFileBar() {
+hasChosen.parentNode.style.display = 'none';
+	myDevice.style.display = 'block';
+	offlineBtn.style.display = 'block';
+	fileBar.style.display = 'none';
+}
+
+////	碰撞检测
+function getCollide(el,el2){
+	var rect = el.getBoundingClientRect();
+	var rect2 = el2.getBoundingClientRect();
+	if(rect.right < rect2.left
+	||rect.left > rect2.right
+	||rect.bottom<rect2.top
+	||rect.top>rect2.bottom){
+		return false;
+	}
+	return true;
 }

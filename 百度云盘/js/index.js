@@ -21,12 +21,17 @@ var element = {
 		regesiter:document.querySelector('#regesiter'),
 		logIn:document.querySelector('#logIn'),
 		choseAll:document.querySelector('#choseAll'),
+		choseAlll:document.querySelector('#choseAlll'),
 		hasChosen:document.querySelector('#hasChosen'),
 		mask:document.querySelector('#mask'),
 		sure:document.querySelector('#sure'),
 		cancel:document.querySelector('#cancel'),
 		turnOff:document.querySelector('#turnOff'),
-		trash:document.querySelector('#trash')
+		trash:document.querySelector('#trash'),
+		fileBar:document.querySelector('#fileBar'),
+		offlineBtn:document.querySelector('#offlineBtn'),
+		myDevice:document.querySelector('#myDevice'),
+		fileDelete:document.querySelector('#fileDelete')
 }
 //	右键菜单
 document.addEventListener('contextmenu',function(e) {
@@ -58,13 +63,15 @@ document.addEventListener('contextmenu',function(e) {
 						e.target.parentNode.parentNode.children[1].checked =
 						selectedLi = rightLi = e.target.parentNode.parentNode;
 				}
+				//	只有一个文件夹时右键后，全选按钮打勾
 				if(rightLi) {
-					if(!rightLi.nextSibling) {
+					if(!rightLi.previousElementSibling&&!rightLi.nextElementSibling) {
 						choseAll.checked = true;
 					} else {
 						rightLi.children[1].children[0].checked = true;
 					}
-					hasChosen.parentNode.style.display = 'block';
+					showFileBar();
+					rightLi.children[1].style.display = 'block';
 					hasChosen.innerHTML = 1;
 				}
 		} else {
@@ -72,15 +79,21 @@ document.addEventListener('contextmenu',function(e) {
 		}
 				resetOffset(element.menu);
 });
-//阻止默认事件
-paths.addEventListener('contextmenu',function(e) {
-	e.preventDefault();
-	e.stopPropagation();
-});
 document.onmousedown = function() {
 	hideContextmenu(element.menu);
 	nameChosen.style.display = 'none';
 }
+//阻止默认事件
+element.menu.addEventListener('click',function(e) {
+	e.stopPropagation();
+});
+mask.addEventListener('mousedown',function(e) {
+	e.stopPropagation();
+});
+paths.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
 nameChosen.addEventListener('mousedown',function(e) {
 	e.stopPropagation();
 });
@@ -112,11 +125,11 @@ var contextmenuCallback = {
 				})
 				view(_ID)
 		},
-		createExcel:function() {
+		createRar:function() {
 				addData({
 					pid:_ID,
-					type: 'excel',
-					name: '新建Excel'
+					type: 'rar',
+					name: '新建压缩包'
 				})
 				view(_ID)
 		},
@@ -313,7 +326,6 @@ element.nameWrong.onclick = function() {
 }
 //	重命名
 renameBtn.onclick = function() {
-	console.log(selectedLi);
 	rename(selectedLi);
 }
 // 上传文件
@@ -339,11 +351,30 @@ sortMenu.children[0].onclick = contextmenuCallback.nameSort;
 sortMenu.children[1].onclick = contextmenuCallback.timeSortB;
 sortMenu.children[2].onclick = contextmenuCallback.typeSort;
 
+//	删除按钮
+fileDelete.onclick = function() {
+	selectedLi.item.pid = -1;
+	hideFileBar();
+	hasChosen.parentNode.style.display = 'none';
+	choseAll.checked = false;
+	view(_ID)
+}
 //	全选
 var nub=0;
 var chosenX;
+
+choseAll.addEventListener('mousedown',function(e) {
+	e.stopPropagation();
+});
+choseAlll.addEventListener('mousedown',function(e) {
+	e.stopPropagation();
+});
 choseAll.onchange = function() {
-	// console.log(chosenX);
+	if(choseAll.checked) {
+		showFileBar();
+	} else {
+		hideFileBar();
+	}
 		var lis = list.children;
 		for(var i=0;i<chosenX.length;i++) {
 			chosenX[i].checked = this.checked;
@@ -359,3 +390,43 @@ choseAll.onchange = function() {
 trash.onclick = function() {
 	view(-1)
 }
+
+//	框选部分
+var lis = list.querySelectorAll('li');
+list.onmousedown = function(e) {
+	if(e.button == 2) {
+		return;
+	}
+	var selectArea = document.createElement('div');
+	var startX = e.clientX;
+	var startY = e.clientY;
+	selectArea.className = 'selectArea';
+	selectArea.style.left = startX + 'px';
+	selectArea.style.top = startY + 'px';
+	list.appendChild(selectArea);
+	document.onmousemove = function(e) {
+		var nowX = e.clientX;
+		var nowY = e.clientY;
+		var disX = Math.abs(nowX - startX);
+		var disY = Math.abs(nowY - startY);
+		selectArea.style.width = Math.abs(nowX-startX) +'px';
+		selectArea.style.height = Math.abs(nowY-startY) +'px';
+		selectArea.style.left = Math.min(nowX,startX) +'px';
+		selectArea.style.top = Math.min(nowY,startY) +'px';
+		//	碰撞后框选
+		for(var i=0;i<lis.length;i++) {
+			if(getCollide(selectArea,lis[i])) {
+				lis[i].classList.add('liActive');
+				lis[i].children[1].style.display = 'block';
+				lis[i].children[1].children[0].checked = true;
+				showFileBar();
+			}
+		}
+	}
+	document.onmouseup = function(e) {
+		console.log(now);
+		if(selectArea) {
+			list.removeChild(selectArea);
+		}
+	}
+};

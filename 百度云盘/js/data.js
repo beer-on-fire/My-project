@@ -11,8 +11,8 @@ var data = {
 						callBackName:'createHtml',
 						name:'新建网页'
 					},{
-						callBackName:'createExcel',
-						name:'新建表格'
+						callBackName:'createRar',
+						name:'新建压缩包'
 					}
 				]
 			},
@@ -61,6 +61,14 @@ var data = {
 			{
 				callBackName:'deleteFile',
 				name:'删除'
+			},
+			{
+				callBackName:'copyFile',
+				name:'复制到'
+			},
+			{
+				callBackName:'moveFile',
+				name:'移动到'
 			}
 		]
 	},
@@ -69,25 +77,25 @@ var data = {
 	        id: 1,
 	        pid: 0,
 	        type: 'floder',
-	        name: '技术'
+	        name: '我的应用数据'
 	    },
 	    {
 	        id: 2,
 	        pid: 0,
 	        type: 'floder',
-	        name: '电影'
+	        name: '我的资源'
 	    },
 	    {
 	        id: 4,
 	        pid: 0,
 	        type: 'floder',
-	        name: '图片'
+	        name: '我的世界'
 	    },
 	    {
 	        id: 5,
 	        pid: 0,
-	        type: 'excel',
-	        name: '数学'
+	        type: 'rar',
+	        name: '压缩包'
 	    },
 	    {
 	        id: 6,
