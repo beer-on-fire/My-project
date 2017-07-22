@@ -114,20 +114,26 @@ function view(pid) {
 				}
 			}
 			li.onclick = function(e) {
-					hasChosen.parentNode.style.display = 'none';
-					if(item.type == 'floder'||item.type == 'excel'||item.type == 'html') {
+					hideFileBar();
+					choseAll.checked = false;
+					//	到最底层时，全选不可选
+					var arr = [];
+					data.list.forEach(function(val) {
+							if(li.item.id == val.pid) {
+									arr.push(val)
+							}
+					});
+					if(arr.length == 0) {
+							cannotChose();
+					}
+					//	如果是文件夹等可打开，其他就播放
+					if(item.type == 'floder'||item.type == 'rar'||item.type == 'html') {
 						view(item.id);
 					} else {
 						openMedia(item.newClass,item.type);
 					}
 			}
 	    element.list.appendChild(li);
-			li.addEventListener('mousemove',function(e) {
-				e.stopPropagation();
-			});
-			li.addEventListener('mousedown',function(e) {
-				e.stopPropagation();
-			});
 			label.addEventListener('click',function(e) {
 				e.stopPropagation();
 			});
@@ -139,10 +145,10 @@ function view(pid) {
 			chosenX = chosen;
 			chosenX.forEach(function(val) {
 				val.onchange = function() {
-					selectedLi = this.parentNode.parentNode;
-					this.parentNode.parentNode.classList.add('liActive');
 					var nub = 0;
-					var isAll = false;
+					// selectedLi = this.parentNode.parentNode;
+
+					this.parentNode.parentNode.classList.add('liActive');
 					if(!this.checked) {
 						this.parentNode.parentNode.classList.remove('liActive');
 					}
@@ -152,8 +158,7 @@ function view(pid) {
 								nub++;
 							}
 					}
-					isAll = nub == chosenX.length?true:false;
-					choseAll.checked = isAll;
+					choseAll.checked = nub == chosenX.length?true:false;
 					hasChosen.innerHTML = nub;
 					if(nub == 0) {
 						hideFileBar();
@@ -161,7 +166,29 @@ function view(pid) {
 						showFileBar();
 					}
 				}
-			})
+			});
+			//	拖拽
+			li.onmousedown = function(e) {
+					e.stopPropagation();
+					var selectLi = list.querySelectorAll('.liActive');
+					var selectLiRect = [];
+					var cloneFile = [];
+					var startX = e.clientX;
+					var startY = e.clientY;
+					for(var i=0;i<selectLi.length;i++) {
+						selectLiRect.push(selectLi[i].getBoundingClientRect());
+						var newNode = selectLi[i].cloneNode(true);
+						newNode.startX = selectLiRect[i].top;
+						newNode.startY = selectLiRect[i].left;
+						css(newNode,'opacity',.4);
+						newNode.style.zIndex = 0;
+						list.appendChild(newNode);
+						cloneFile.push(newNode);
+						if(selectLi[i] == this) {
+							var self = newNode;
+						}
+					}
+			}
 	});
 
 /**
@@ -176,6 +203,7 @@ function view(pid) {
 	var li = document.createElement('li');
 	li.innerHTML = '<a href="javascript:;">全部文件</a>';
 	li.onclick = function() {
+		canChose();
 		view(0);
 	}
 	element.crumbs.appendChild(li);
@@ -189,6 +217,7 @@ function view(pid) {
 			li.innerHTML = `<span>&gt;</span><a href="javascript:;">${item.name}(${item.extname})</a>`;
 		}
 		li.onclick = function() {
+			canChose();
 			view(item.id);
 		}
 		element.crumbs.appendChild(li)
@@ -269,6 +298,7 @@ function openMedia(file,fileType) {
 //	重命名
 var timer;
 function rename(which) {
+	console.log(selectedLi);
 	if(which) {
 		var p = which.querySelector('p');
 		var input = which.querySelectorAll('input')[1];
@@ -297,6 +327,7 @@ function rename(which) {
 			}
 		};
 		input.onblur = function() {
+			hideFileBar();
 				//	重名
 				if(hasName()){
 					element.mask.style.display = 'block'
@@ -362,13 +393,13 @@ function rename(which) {
 }
 //	文件显示控制条
 function showFileBar() {
-hasChosen.parentNode.style.display = 'block';
+	hasChosen.parentNode.style.display = 'block';
 	myDevice.style.display = 'none';
 	offlineBtn.style.display = 'none';
 	fileBar.style.display = 'block';
 }
 function hideFileBar() {
-hasChosen.parentNode.style.display = 'none';
+	hasChosen.parentNode.style.display = 'none';
 	myDevice.style.display = 'block';
 	offlineBtn.style.display = 'block';
 	fileBar.style.display = 'none';
@@ -385,4 +416,14 @@ function getCollide(el,el2){
 		return false;
 	}
 	return true;
+}
+
+// 是否可以全选
+function cannotChose() {
+	choseAll.disabled = true;
+	choseAlll.style.color = '#ccc'
+}
+function canChose() {
+	choseAll.disabled = false;
+	choseAlll.style.color = '#000'
 }

@@ -31,7 +31,8 @@ var element = {
 		fileBar:document.querySelector('#fileBar'),
 		offlineBtn:document.querySelector('#offlineBtn'),
 		myDevice:document.querySelector('#myDevice'),
-		fileDelete:document.querySelector('#fileDelete')
+		fileDelete:document.querySelector('#fileDelete'),
+		allfile:document.querySelector('.allfile')
 }
 //	右键菜单
 document.addEventListener('contextmenu',function(e) {
@@ -64,16 +65,14 @@ document.addEventListener('contextmenu',function(e) {
 						selectedLi = rightLi = e.target.parentNode.parentNode;
 				}
 				//	只有一个文件夹时右键后，全选按钮打勾
-				if(rightLi) {
-					if(!rightLi.previousElementSibling&&!rightLi.nextElementSibling) {
-						choseAll.checked = true;
-					} else {
-						rightLi.children[1].children[0].checked = true;
-					}
-					showFileBar();
-					rightLi.children[1].style.display = 'block';
-					hasChosen.innerHTML = 1;
+				if(!rightLi.previousElementSibling&&!rightLi.nextElementSibling) {
+					choseAll.checked = true;
+				} else {
+					rightLi.children[1].children[0].checked = true;
 				}
+				showFileBar();
+				rightLi.children[1].style.display = 'block';
+				hasChosen.innerHTML = 1;
 		} else {
 				showContextMenu(element.menu,data.menu.deskMenu);
 		}
@@ -94,13 +93,21 @@ paths.addEventListener('contextmenu',function(e) {
 	e.preventDefault();
 	e.stopPropagation();
 });
-nameChosen.addEventListener('mousedown',function(e) {
-	e.stopPropagation();
-});
 mask.addEventListener('contextmenu',function(e) {
 	e.preventDefault();
 	e.stopPropagation();
-})
+});
+choseAll.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+choseAlll.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+nameChosen.addEventListener('mousedown',function(e) {
+	e.stopPropagation();
+});
 //	窗口大小变化时调整menu位置
 window.addEventListener('resize', function(e) {
 	resetOffset(element.menu)
@@ -116,6 +123,7 @@ var contextmenuCallback = {
 				name: '新建文件夹'
 			})
 			view(_ID)
+			canChose();
 		},
 		createHtml:function() {
 				addData({
@@ -124,6 +132,7 @@ var contextmenuCallback = {
 					name: '新建网页'
 				})
 				view(_ID)
+				canChose();
 		},
 		createRar:function() {
 				addData({
@@ -132,6 +141,7 @@ var contextmenuCallback = {
 					name: '新建压缩包'
 				})
 				view(_ID)
+				canChose();
 		},
 		nameSort:function() {
 			data.list.sort(function(a, b) {
@@ -265,6 +275,9 @@ var contextmenuCallback = {
 				//	需要用一个属性来记录下上传的文件的内容
 				view(_ID);
 				fileBtn.value = "";
+				canChose();
+				hideFileBar();
+				choseAll.checked = false;
 			},{
 				once:true
 			});
@@ -285,6 +298,17 @@ var contextmenuCallback = {
 				setTimeout( function(){
 					rename(rightLi)
 				});
+		},
+		copyFile:function() {
+			// addData({
+			// 	pid:rightLi.item.pid,
+			// 	type: rightLi.item.type,
+			// 	name: rightLi.item.name
+			// })
+			// view(_ID);
+		},
+		moveFile:function() {
+
 		}
 	}
 
@@ -296,6 +320,9 @@ var selectedLi = null;
 view(_ID);
 //	返回上一级
 element.back.onclick = function() {
+		canChose();
+		hideFileBar();
+		choseAll.checked = false;
 		//	返回上一级：获取当前目录的父级的子目录
 		var info = getInfo(_ID);
 		if(info) {
@@ -307,6 +334,7 @@ element.createBtn.onclick = function() {
 		nameChosen.style.display = 'block';
 }
 element.nameRight.onclick = function() {
+			canChose();
 		if(element.filename.value == '') {
 			alert('请输入名字')
 			return
@@ -317,7 +345,6 @@ element.nameRight.onclick = function() {
 			name: element.filename.value
 		});
 		view(_ID);
-		console.log(chosenX);
 		choseAll.checked = false;
 }
 element.nameWrong.onclick = function() {
@@ -326,6 +353,10 @@ element.nameWrong.onclick = function() {
 }
 //	重命名
 renameBtn.onclick = function() {
+	var liss = list.querySelectorAll('.liActive');
+	for(var i=0;i<liss.length;i++) {
+			selectedLi = liss[i];
+	}
 	rename(selectedLi);
 }
 // 上传文件
@@ -353,7 +384,15 @@ sortMenu.children[2].onclick = contextmenuCallback.typeSort;
 
 //	删除按钮
 fileDelete.onclick = function() {
-	selectedLi.item.pid = -1;
+	for(var i=0;i<lis.length;i++) {
+			if(lis[i].className == 'liActive') {
+				lis[i].item.pid = -1;
+			}
+	}
+	var nub = list.querySelectorAll('.liActive').length;
+	if(nub == lis.length) {
+		cannotChose();
+	}
 	hideFileBar();
 	hasChosen.parentNode.style.display = 'none';
 	choseAll.checked = false;
@@ -362,37 +401,48 @@ fileDelete.onclick = function() {
 //	全选
 var nub=0;
 var chosenX;
-
-choseAll.addEventListener('mousedown',function(e) {
-	e.stopPropagation();
-});
-choseAlll.addEventListener('mousedown',function(e) {
-	e.stopPropagation();
-});
 choseAll.onchange = function() {
 	if(choseAll.checked) {
 		showFileBar();
 	} else {
 		hideFileBar();
 	}
-		var lis = list.children;
-		for(var i=0;i<chosenX.length;i++) {
-			chosenX[i].checked = this.checked;
-			chosenX[i].parentNode.style.display = this.checked?'block':'none';
-			lis[i].className = this.checked?'liActive':'';
-			nub = this.checked?chosenX.length:0;
-			hasChosen.parentNode.style.display = this.checked?'block':'none';
-			hasChosen.innerHTML = nub;
-		}
+	var lis = list.children;
+	for(var i=0;i<chosenX.length;i++) {
+		chosenX[i].checked = this.checked;
+		chosenX[i].parentNode.style.display = this.checked?'block':'none';
+		lis[i].className = this.checked?'liActive':'';
+		nub = this.checked?chosenX.length:0;
+		hasChosen.parentNode.style.display = this.checked?'block':'none';
+		hasChosen.innerHTML = nub;
+	}
 }
 
 //	垃圾箱
 trash.onclick = function() {
-	view(-1)
+	hasChosen.parentNode.style.display = 'none';
+	choseAll.checked = false;
+	hideFileBar();
+	view(-1);
+	var lis = list.querySelectorAll('li');
+	if(lis.length == 0) {
+		cannotChose()
+	} else {
+		canChose()
+	}
+}
+//	全部文件
+element.allfile.onclick = function() {
+	view(0)
+	if(lis.length == 0) {
+		cannotChose()
+	} else {
+		canChose()
+	}
 }
 
 //	框选部分
-var lis = list.querySelectorAll('li');
+var lis = list.getElementsByTagName('li');
 list.onmousedown = function(e) {
 	if(e.button == 2) {
 		return;
@@ -415,18 +465,19 @@ list.onmousedown = function(e) {
 		selectArea.style.top = Math.min(nowY,startY) +'px';
 		//	碰撞后框选
 		for(var i=0;i<lis.length;i++) {
-			if(getCollide(selectArea,lis[i])) {
-				lis[i].classList.add('liActive');
-				lis[i].children[1].style.display = 'block';
-				lis[i].children[1].children[0].checked = true;
-				showFileBar();
-			}
+				if(getCollide(selectArea,lis[i])) {
+					canChose();
+					showFileBar();
+					lis[i].classList.add('liActive');
+					lis[i].children[1].style.display = 'block';
+					chosenX[i].checked = true;
+				}
 		}
 	}
 	document.onmouseup = function(e) {
-		console.log(now);
-		if(selectArea) {
-			list.removeChild(selectArea);
-		}
+		(selectArea.parentNode == list) && list.removeChild(selectArea);
+		var nub = list.querySelectorAll('.liActive').length;
+		hasChosen.innerHTML = nub;
+		choseAll.checked = nub==lis.length?true:false;
 	}
 };
