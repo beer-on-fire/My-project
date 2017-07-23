@@ -9,6 +9,36 @@ function getChildren(id) {
   })
 }
 
+//  查找所有子级并返回树结构
+function getTree(id,level) {
+  var level = level||0;
+  var children = getChildren(id);
+  var treeData = [];
+  children.forEach(function(item) {
+    item.level = level;
+    treeData.push(item);
+    treeData = treeData.concat(getTree(item.id,level+1));
+  });
+  return treeData
+}
+function viewTree() {
+  var allChildren = getTree(0);
+  tree.innerHTML = '';
+  allChildren.forEach(function(item) {
+    var name = item.name;
+    var id = item.id
+    var li = document.createElement('li');
+    var strong = document.createElement('strong');
+    li.appendChild(strong)
+    for(var i=0;i<item.level;i++) {
+      strong.style.marginLeft = ((i+1)*10) + 'px';
+    }
+    strong.innerHTML = name;
+    li.setAttribute("treeid",id)
+    tree.appendChild(li);
+  })
+
+}
 /**
  * 获取指定id的信息
  *@param  id 要查找的id

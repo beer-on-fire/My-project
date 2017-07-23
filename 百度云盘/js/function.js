@@ -128,7 +128,11 @@ function view(pid) {
 					}
 					//	如果是文件夹等可打开，其他就播放
 					if(item.type == 'floder'||item.type == 'rar'||item.type == 'html') {
-						view(item.id);
+						if(item.cId) {
+							view(item.cId);
+						} else {
+							view(item.id);
+						}
 					} else {
 						openMedia(item.newClass,item.type);
 					}
@@ -146,8 +150,7 @@ function view(pid) {
 			chosenX.forEach(function(val) {
 				val.onchange = function() {
 					var nub = 0;
-					// selectedLi = this.parentNode.parentNode;
-
+					selectedLi = this.parentNode.parentNode;
 					this.parentNode.parentNode.classList.add('liActive');
 					if(!this.checked) {
 						this.parentNode.parentNode.classList.remove('liActive');
@@ -298,7 +301,6 @@ function openMedia(file,fileType) {
 //	重命名
 var timer;
 function rename(which) {
-	console.log(selectedLi);
 	if(which) {
 		var p = which.querySelector('p');
 		var input = which.querySelectorAll('input')[1];
@@ -426,4 +428,11 @@ function cannotChose() {
 function canChose() {
 	choseAll.disabled = false;
 	choseAlll.style.color = '#000'
+}
+
+
+//	结构树是否出现
+function showTree() {
+	treeMask.style.display = 'block';
+	viewTree();
 }

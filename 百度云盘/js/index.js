@@ -32,7 +32,19 @@ var element = {
 		offlineBtn:document.querySelector('#offlineBtn'),
 		myDevice:document.querySelector('#myDevice'),
 		fileDelete:document.querySelector('#fileDelete'),
-		allfile:document.querySelector('.allfile')
+		allfile:document.querySelector('.allfile'),
+		treeMask:document.querySelector('#treeMask'),
+		treeSure:document.querySelector('#treeSure'),
+		treeCancel:document.querySelector('#treeCancel'),
+		tree:document.querySelector('#tree'),
+		fileCopyto:document.querySelector('#fileCopyto'),
+		fileMoveto:document.querySelector('#fileMoveto'),
+		header:document.querySelector('#header'),
+		nameTxt:document.querySelector('#nameTxt'),
+		sortSearchSee:document.querySelector('#sortSearchSee'),
+		aside:document.querySelector('#aside'),
+		choseNub:document.querySelector('#choseNub'),
+		notThis:document.querySelector('#notThis')
 }
 //	右键菜单
 document.addEventListener('contextmenu',function(e) {
@@ -89,6 +101,29 @@ element.menu.addEventListener('click',function(e) {
 mask.addEventListener('mousedown',function(e) {
 	e.stopPropagation();
 });
+nameChosen.addEventListener('mousedown',function(e) {
+	e.stopPropagation();
+});
+header.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+nameTxt.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+fileBar.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+sortSearchSee.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
+aside.addEventListener('contextmenu',function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+});
 paths.addEventListener('contextmenu',function(e) {
 	e.preventDefault();
 	e.stopPropagation();
@@ -97,15 +132,8 @@ mask.addEventListener('contextmenu',function(e) {
 	e.preventDefault();
 	e.stopPropagation();
 });
-choseAll.addEventListener('contextmenu',function(e) {
+choseNub.addEventListener('contextmenu',function(e) {
 	e.preventDefault();
-	e.stopPropagation();
-});
-choseAlll.addEventListener('contextmenu',function(e) {
-	e.preventDefault();
-	e.stopPropagation();
-});
-nameChosen.addEventListener('mousedown',function(e) {
 	e.stopPropagation();
 });
 //	窗口大小变化时调整menu位置
@@ -300,15 +328,101 @@ var contextmenuCallback = {
 				});
 		},
 		copyFile:function() {
-			// addData({
-			// 	pid:rightLi.item.pid,
-			// 	type: rightLi.item.type,
-			// 	name: rightLi.item.name
-			// })
-			// view(_ID);
+			showTree();
+			var treeli = tree.querySelectorAll('li');
+			//	复制移动+结构树
+			for(var i=0;i<treeli.length;i++) {
+				treeli[i].onclick = function() {
+					for(var j=0;j<treeli.length;j++) {
+							treeli[j].className = ''
+					}
+					this.className = 'active'
+					var treeid = this.attributes["treeid"].nodeValue;
+					var _id = getMaxId();
+					var treename = selectedLi.children[2].children[0].innerHTML;
+					var cId = selectedLi.item.id;
+					var treetype = selectedLi.item.type;
+					var firId = selectedLi.item.pid;
+					var cIdChild = getTree(cId);
+					var cIdArr = [];
+					cIdArr.push(cId);
+					for(var i=0;i<cIdChild.length;i++) {
+						cIdArr.push(cIdChild[i].id)
+					}
+					treeSure.onclick = function() {
+						treeMask.style.display = 'none';
+						for(var i=0;i<cIdArr.length;i++) {
+							if(treeid == cIdArr[i]) {
+								notThis.style.display = 'block';
+								setTimeout(function(){
+									notThis.style.display = 'none';
+								},1000)
+								break
+							}
+							data.list.push({
+								id: ++_id,
+								cId:cId,
+								pid: treeid,
+								name: treename,
+								type:treetype
+							});
+							return
+						}
+					};
+				};
+			}
+			treeCancel.onclick = function() {
+				treeMask.style.display = 'none';
+			}
 		},
 		moveFile:function() {
-
+			showTree();
+			var treeli = tree.querySelectorAll('li');
+			for(var i=0;i<treeli.length;i++) {
+					treeli[i].onclick = function() {
+						for(var j=0;j<treeli.length;j++) {
+								treeli[j].className = ''
+						}
+						this.className = 'active'
+						var treeid = this.attributes["treeid"].nodeValue;
+						var _id = getMaxId();
+						var treename = selectedLi.children[2].children[0].innerHTML;
+						var treetype = selectedLi.item.type;
+						var cId = selectedLi.item.id;
+						var treetype = selectedLi.item.type;
+						var firId = selectedLi.item.pid;
+						var cIdChild = getTree(cId);
+						var cIdArr = [];
+						cIdArr.push(cId);
+						for(var i=0;i<cIdChild.length;i++) {
+							cIdArr.push(cIdChild[i].id)
+						}
+						treeSure.onclick = function() {
+							treeMask.style.display = 'none';
+							for(var i=0;i<cIdArr.length;i++) {
+								if(treeid == cIdArr[i]) {
+									notThis.style.display = 'block';
+									setTimeout(function(){
+										notThis.style.display = 'none';
+									},1000)
+									break;
+								}
+								selectedLi.item.pid = -1;
+								view(firId);
+								data.list.push({
+										id: ++_id,
+										pid: treeid,
+										name: treename,
+										type:treetype
+								});
+								return;
+							}
+						};
+					};
+				}
+			treeCancel.onclick = function() {
+				treeMask.style.display = 'none';
+			}
 		}
 	}
 
@@ -398,6 +512,12 @@ fileDelete.onclick = function() {
 	choseAll.checked = false;
 	view(_ID)
 }
+
+//	复制按钮
+fileCopyto.onclick = contextmenuCallback.copyFile;
+//	移动按钮
+fileMoveto.onclick = contextmenuCallback.moveFile;
+
 //	全选
 var nub=0;
 var chosenX;

@@ -643,3 +643,98 @@ ul {
 	border:1px dotted blue;
 	background:rgba(0,0,255,.1);
 }
+
+/*结构树*/
+#treeMask {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0.3);
+	z-index:9999;
+	display:none;
+}
+#treeWrap {
+	width:520px;
+	height:321px;
+	background: url(../img/cloud/treeMask.png) no-repeat;
+	position: absolute;
+	top:50%;
+	left:50%;
+	margin:-160.5px 0 0 -260px;
+}
+#treeNew{
+	position: absolute;
+	left:10px;
+	bottom:15px;
+	width:111px;
+	height:34px;
+	background: url(../img/cloud/treeNew.png) no-repeat;
+	border:none;
+}
+#treeSure{
+	position: absolute;
+	left:236px;
+	bottom:15px;
+	width:132px;
+	height:34px;
+	background: url(../img/cloud/treeSure.png) no-repeat;
+	border:none;
+}
+#treeCancel{
+	position: absolute;
+	left:378px;
+	bottom:15px;
+	width:132px;
+	height:34px;
+	background: url(../img/cloud/treeCancel.png) no-repeat;
+	border:none;
+}
+#tree {
+	width:496px;
+	height:200px;
+	border:1px solid #ccc;
+	position: absolute;
+	top:55px;
+	left:11px;
+	overflow:auto;
+}
+#tree li {
+	width:100%;
+	height:30px;
+	font:14px/30px '微软雅黑';
+	box-sizing: border-box;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+	padding-left:23px;
+}
+#tree li:nth-of-type(1) {
+	border-top: none;
+}
+#tree span {
+	width:18px;
+	height:30px;
+	padding:0 5px 0 38px;
+	float:left;
+}
+#tree strong {
+	float:left;
+	height:30px;
+	padding-left:25px;
+	background: url(../img/cloud/treeFloder.png) no-repeat 0 8px;
+}
+#tree li.active {
+	background:#e5f0fb;
+	border-color:#bbd4ef;
+}
+#notThis {
+	width: 239px;
+	height:39px;
+	background: url(../img/cloud/copyalert.png) no-repeat;
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin: -180px 0 0 -60px;
+	display:none;
+}
