@@ -128,11 +128,7 @@ function view(pid) {
 					}
 					//	如果是文件夹等可打开，其他就播放
 					if(item.type == 'floder'||item.type == 'rar'||item.type == 'html') {
-						if(item.cId) {
-							view(item.cId);
-						} else {
-							view(item.id);
-						}
+						view(item.id);
 					} else {
 						openMedia(item.newClass,item.type);
 					}
@@ -208,6 +204,7 @@ function view(pid) {
 	li.onclick = function() {
 		canChose();
 		view(0);
+		choseAll.checked = false;
 	}
 	element.crumbs.appendChild(li);
 	//	所有的父级点击
@@ -222,6 +219,7 @@ function view(pid) {
 		li.onclick = function() {
 			canChose();
 			view(item.id);
+			choseAll.checked = false;
 		}
 		element.crumbs.appendChild(li)
 	});

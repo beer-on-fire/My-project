@@ -77,61 +77,71 @@ var data = {
 	        id: 1,
 	        pid: 0,
 	        type: 'floder',
-	        name: '我的应用数据'
+	        name: '我的应用数据',
+					extname:''
 	    },
 	    {
 	        id: 2,
 	        pid: 0,
 	        type: 'floder',
-	        name: '我的资源'
+	        name: '我的资源',
+					extname:''
 	    },
 	    {
 	        id: 4,
 	        pid: 0,
 	        type: 'floder',
-	        name: '我的世界'
+	        name: '我的世界',
+					extname:''
 	    },
 	    {
 	        id: 5,
 	        pid: 0,
 	        type: 'rar',
-	        name: '压缩包'
+	        name: '压缩包',
+					extname:''
 	    },
 	    {
 	        id: 6,
 	        pid: 0,
 	        type: 'html',
-	        name: '自由门'
+	        name: '自由门',
+					extname:''
 	    },
 	    {
 	        id: 7,
 	        pid: 1,
 	        type: 'floder',
-	        name: '前端'
+	        name: '前端',
+					extname:''
 	    },
 	    {
 	        id: 8,
 	        pid: 1,
 	        type: 'floder',
-	        name: '后端'
+	        name: '后端',
+					extname:''
 	    },
 	    {
 	        id: 9,
 	        pid: 7,
 	        type: 'floder',
-	        name: 'javascript'
+	        name: 'javascript',
+					extname:''
 	    },
 	    {
 	        id: 10,
 	        pid: 9,
 	        type: 'floder',
-	        name: 'ECMAScript'
+	        name: 'ECMAScript',
+					extname:''
 	    },
 	    {
 	        id: 11,
 	        pid: 10,
 	        type: 'floder',
-	        name: 'ECMAScript2015'
+	        name: 'ECMAScript2015',
+					extname:''
 	    }
 	]
 };

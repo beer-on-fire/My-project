@@ -25,8 +25,8 @@ function viewTree() {
   var allChildren = getTree(0);
   tree.innerHTML = '';
   allChildren.forEach(function(item) {
-    var name = item.name;
-    var id = item.id
+    var name = item.name + item.extname;
+    var id = item.id;
     var li = document.createElement('li');
     var strong = document.createElement('strong');
     li.appendChild(strong)
@@ -37,7 +37,6 @@ function viewTree() {
     li.setAttribute("treeid",id)
     tree.appendChild(li);
   })
-
 }
 /**
  * 获取指定id的信息
@@ -79,9 +78,9 @@ function getParents(id) {
 }
 //  添加新数据
 function addData(newData) {
+  newData.extname = '';
   newData.id = getMaxId()+1;
   var existFiles = checkName(newData);
-  // console.log(existFiles);
   if(existFiles) {
       for(var i = 1;i <= existFiles.length;i++) {
         //find,数组中满足条件的第一个元素的值,返回值是布尔值
@@ -105,4 +104,92 @@ function getMaxId() {
     }
   });
   return maxId;
+}
+//  利用递归获取当前id的所有子级元素
+function getAllChildren(id) {
+  var childrenInfo = getChildrenValue(id);
+  var childs = [];
+  childrenInfo.forEach(function(item) {
+    //  如果存在子级,递归调用
+    if(item) {
+      childs.push(item);
+      var moreChild = getAllChildren(item.id);
+      childs = moreChild.concat(childs);
+    }
+  });
+  return childs;
+}
+//  找到当前id下的子级元素
+function getChildrenValue(id) {
+  var arr = [];
+  arr = data.list.filter(function(item) {
+    if(item.pid == id) {
+      return true;
+    }
+    return false;
+  });
+  return arr;
+}
+
+
+/**
+ * 粘贴
+ *treeClick 是点击的树里面的那项的id
+ *allChilds 是父级的所有子级
+ */
+function stickFile(stickArr) {
+  console.log(stickArr);
+  var stick = stickArr;
+  stick.pid = treeClick;
+//  获取我当前选中的下面有哪些子级
+  var allChilds = getAllChildren(selectedLi.item.id);
+  allChilds.push(stick);
+
+  var arr = [];
+  allChilds.forEach(function(item) {
+    arr.push(deepCopy(item));
+  });
+  getStickArr(arr);
+}
+
+//  修改当前获取到的子级们的id和pid,并返回，使之不与原来的冲突
+function getStickArr(info) {
+  //  将id赋值给cId
+  info.forEach(function(item) {
+      item.cId = item.id;
+  });
+  //  id根据当前最大值依次加一
+  var idNub = getMaxId();
+  info.forEach(function(item) {
+      item.id = idNub++;
+  });
+  var arr = [];
+  info.forEach(function(item) {
+    arr.push(deepCopy(item));
+  });
+
+  for(var i=0;i<info.length;i++) {
+    for(var j=0;j<arr.length;j++) {
+      if(info[i].pid == arr[j].cId) {
+        info[i].pid = arr[j].id;
+      }
+    }
+  }
+  info.forEach(function(item) {
+     data.list.push(item);
+  });
+  view(_ID)
+}
+//  深拷贝对象 ？？？？？？？？？？
+function deepCopy(p, c) {
+    var c = c || {};
+    for (var i in p) {
+        if (typeof p[i] === 'object') {
+            c[i] = (p[i].constructor === Array) ? [] : {};
+            deepCopy(p[i], c[i]);
+        } else {
+            c[i] = p[i];
+        }
+    }
+    return c;
 }
