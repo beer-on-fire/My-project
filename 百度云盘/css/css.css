@@ -125,13 +125,16 @@ ul {
   background-color:#e4e9ec;
 }
 #aside ul li.active{
-  background:#e4e9ec url(../img/cloud/allfile2.png) no-repeat 24px 13px;
+  background-color:#e4e9ec;
 }
-#aside ul li.active a{
+#aside ul li.active a {
   color:#3b8cff;
 }
 #aside ul .allfile {
   background:url(../img/cloud/allfile.png) no-repeat 24px 13px;
+}
+#aside ul .allfile.active {
+	background:#e4e9ec url(../img/cloud/allfile2.png) no-repeat 24px 13px;
 }
 #aside ul .myshare {
   background:url(../img/cloud/myshare.png) no-repeat 24px 13px;
@@ -170,9 +173,9 @@ ul {
 }
 
 #main {
-  width: 100%;
+  	width: 100%;
 	float: left;
-  height:588px;
+  	height:565px;
 }
 #main .mainR {
   position:relative;
@@ -532,8 +535,8 @@ ul {
 	background:url(../img/img/html.png) no-repeat center;
 	background-size: contain;
 }
-#list figure.rar {
-	background:url(../img/img/rar.png) no-repeat center;
+#list figure.exe {
+	background:url(../img/img/exe.png) no-repeat center;
 	background-size: contain;
 }
 #list figure.image {
@@ -562,6 +565,7 @@ ul {
 	height: 100%;
 	background: rgba(0,0,0,.5);
 	display: none;
+	z-index:99999;
 }
 #fileDetailCols {
 	position: absolute;

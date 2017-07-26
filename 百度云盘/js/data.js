@@ -11,8 +11,8 @@ var data = {
 						callBackName:'createHtml',
 						name:'新建网页'
 					},{
-						callBackName:'createRar',
-						name:'新建压缩包'
+						callBackName:'createExe',
+						name:'新建启动器'
 					}
 				]
 			},
@@ -70,6 +70,16 @@ var data = {
 				callBackName:'moveFile',
 				name:'移动到'
 			}
+		],
+		'trashMenu':[
+			{
+				callBackName:'deleteAbsolute',
+				name:'彻底删除'
+			},
+			{
+				callBackName:'restore',
+				name:'还原'
+			}
 		]
 	},
 	list: [
@@ -97,8 +107,8 @@ var data = {
 	    {
 	        id: 5,
 	        pid: 0,
-	        type: 'rar',
-	        name: '压缩包',
+	        type: 'exe',
+	        name: '启动器',
 					extname:''
 	    },
 	    {

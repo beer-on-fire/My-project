@@ -138,12 +138,18 @@ function getChildrenValue(id) {
  *allChilds 是父级的所有子级
  */
 function stickFile(stickArr) {
-  console.log(stickArr);
   var stick = stickArr;
-  stick.pid = treeClick;
+  stick.forEach(function(item) {
+    item.pid = treeClick;
+  })
 //  获取我当前选中的下面有哪些子级
-  var allChilds = getAllChildren(selectedLi.item.id);
-  allChilds.push(stick);
+  var allChilds = [];
+  for(var i = 0;i < stickLi.length;i++) {
+    (getAllChildren(stickLi[i].item.id)).forEach(function(elements) {
+      allChilds.push(elements);
+    });
+  }
+  allChilds = allChilds.concat(stick);
 
   var arr = [];
   allChilds.forEach(function(item) {

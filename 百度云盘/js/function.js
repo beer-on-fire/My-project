@@ -114,6 +114,7 @@ function view(pid) {
 				}
 			}
 			li.onclick = function(e) {
+					hideContextmenu(element.menu);
 					hideFileBar();
 					choseAll.checked = false;
 					//	到最底层时，全选不可选
@@ -127,12 +128,15 @@ function view(pid) {
 							cannotChose();
 					}
 					//	如果是文件夹等可打开，其他就播放
-					if(item.type == 'floder'||item.type == 'rar'||item.type == 'html') {
+					if(item.type == 'floder'||item.type == 'exe'||item.type == 'html') {
 						view(item.id);
 					} else {
 						openMedia(item.newClass,item.type);
 					}
 			}
+			li.addEventListener('mousedown',function(e) {
+			  e.stopPropagation();
+			})
 	    element.list.appendChild(li);
 			label.addEventListener('click',function(e) {
 				e.stopPropagation();
@@ -162,32 +166,10 @@ function view(pid) {
 					if(nub == 0) {
 						hideFileBar();
 					} else {
-						showFileBar();
+						trash.className != 'active' && showFileBar();
 					}
 				}
 			});
-			//	拖拽
-			li.onmousedown = function(e) {
-					e.stopPropagation();
-					var selectLi = list.querySelectorAll('.liActive');
-					var selectLiRect = [];
-					var cloneFile = [];
-					var startX = e.clientX;
-					var startY = e.clientY;
-					for(var i=0;i<selectLi.length;i++) {
-						selectLiRect.push(selectLi[i].getBoundingClientRect());
-						var newNode = selectLi[i].cloneNode(true);
-						newNode.startX = selectLiRect[i].top;
-						newNode.startY = selectLiRect[i].left;
-						css(newNode,'opacity',.4);
-						newNode.style.zIndex = 0;
-						list.appendChild(newNode);
-						cloneFile.push(newNode);
-						if(selectLi[i] == this) {
-							var self = newNode;
-						}
-					}
-			}
 	});
 
 /**
@@ -427,10 +409,30 @@ function canChose() {
 	choseAll.disabled = false;
 	choseAlll.style.color = '#000'
 }
-
-
+//	全选是否勾选
+function notChoseAll() {
+	hasChosen.parentNode.style.display = 'none';
+	choseAll.checked = false;
+}
 //	结构树是否出现
 function showTree() {
 	treeMask.style.display = 'block';
 	viewTree();
+}
+
+//	深度克隆
+function extend(originObject) {
+	// 根据originObject的原始类型来对新对象进行对应的初始化，保证进来什么格式出去就是什么格式
+	var newObject = Array.isArray(originObject) ? [] : {};
+	for (var property in originObject) {
+			// 如果当前数据是对象的话，那么就需要进行深度克隆
+			// 注意：typeof来判断数据类型是有一个小的问题的，null的typeof结果也是object，所以需要排除null值的深度克隆
+			if (typeof originObject[property] == 'object' && originObject[property] !== null) {
+					// 核心：递归克隆
+					newObject[property] = extend(originObject[property]);
+			} else {
+					newObject[property] = originObject[property];
+			}
+	}
+	return newObject;
 }
