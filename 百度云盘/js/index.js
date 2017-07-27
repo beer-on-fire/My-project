@@ -45,7 +45,80 @@ var element = {
   choseNub: document.querySelector('#choseNub'),
   notThis: document.querySelector('#notThis'),
   allfile: document.querySelector('.allfile'),
-  allimage: document.querySelector('.allimage')
+  allimage: document.querySelector('.allimage'),
+  logInMask:document.querySelector('#logInMask'),
+  logName:document.querySelector('.logName'),
+  logPassword:document.querySelector('.logPassword'),
+  logInsure:document.querySelector('#logInsure'),
+  logInalert:document.querySelector('.logInalert'),
+  logWrap:document.querySelector('#logWrap'),
+  logIn:document.querySelector('#logIn'),
+  logMessage:document.querySelector('.logMessage')
+}
+
+//  登录界面
+element.logPassword.onkeydown = element.logName.onkeydown = function() {
+    this.style.background = 'white';
+};
+element.logPassword.onkeyup = function() {
+    var str = element.logPassword.value
+    var newStr = str.replace(/\d|\w/g, function(a) {
+        var s = '';
+        for (var i=0; i<a.length; i++) {
+            s += '*';
+        }
+        return s;
+    });
+    element.logPassword.value = newStr;
+}
+//  验证手机号
+$.extend({
+    validateQQ: function(str) {
+        return /^[1-9]\d{9,11}$/.test(str);
+    }
+});
+logInsure.onclick = function() {
+    if(element.logName.value == '') {
+        element.logInalert.innerHTML = "请输入手机号"
+    }
+    else if(element.logPassword.value == '') {
+        element.logInalert.innerHTML = "请输入密码"
+    }
+    else if($.validateQQ(element.logName.value) == false) {
+        element.logInalert.innerHTML = "您输入的账号/密码错误"
+    }
+    else {
+        startMove({
+            el:logInMask,
+            target:{
+                opacity:0
+            },
+            time:500,
+            type:'easeOut',
+        })
+        setTimeout(function() {
+            logInMask.style.display = 'none';
+        },600)
+        logWrap.style.display = 'block';
+        logWrap2.style.display = 'none';
+    }
+}
+logIn.onclick = function() {
+    logInMask.style.display = 'block';
+    startMove({
+        el:logInMask,
+        target:{
+            opacity:100
+        },
+        time:500,
+        type:'easeOut'
+    })
+}
+logWrap.onmouseover = function() {
+    element.logMessage.style.display = 'block'
+}
+logWrap.onmouseout = function() {
+    element.logMessage.style.display = 'none'
 }
 //	右键菜单
 document.addEventListener('contextmenu', function(e) {
@@ -366,6 +439,25 @@ var contextmenuCallback = {
   },
   copyFile: function() {
     showTree();
+    //  向要粘贴的数组里push进我要复制的
+    stickLi = [];
+    var cIdChild = [];
+    var cIdParents = [];
+    var cIdArr = [];
+    //  获取所有父级子级的id，不让他复制到其自身或自己下面
+    stickLi = $('.liActive').each(function(index,element) {
+        cIdArr.push(element.item.id)
+        return element
+      })
+    for(var i=0;i<stickLi.length;i++) {
+      (getTree(stickLi[i].item.id)).forEach(function(elements) {
+        cIdChild.push(elements.id);
+      });
+      (getParents(stickLi[i].item.id)).forEach(function(elements) {
+        cIdParents.push(elements.id);
+      });
+    }
+    cIdArr = cIdArr.concat(cIdChild.concat(cIdParents));
     //  结构树点击效果
     $('#tree li').on('click',function() {
       $('#tree li').removeClass('active');
@@ -373,44 +465,37 @@ var contextmenuCallback = {
       //  获取我当前点击的树里面那个的对应文件的id
       var treeid = parseInt(this.attributes["treeid"].nodeValue);
       treeClick = treeid;
-      var cId = selectedLi.item.id;
-      var cIdChild = getTree(cId);
-      var cIdParents = getParents(cId);
-      var cIdArr = [];
-      var cIdArr2 = [];
-      cIdArr2.push(cId);
-      for (var i = 0; i < cIdChild.length; i++) {
-        cIdArr.push(cIdChild[i].id)
-      }
-      for (var i = 0; i < cIdParents.length; i++) {
-        cIdArr2.push(cIdParents[i].id)
-      }
-      cIdArr = cIdArr2.concat(cIdArr);
       //  不能复制到自身或者子级下面
-      for (var j = 0; j < cIdArr.length; j++) {
-        if (treeid == cIdArr[j]) {
-          treeSure.onclick = function() {
-            treeMask.style.display = 'none';
-            notThis.style.display = 'block';
-            setTimeout(function() {
-              notThis.style.display = 'none';
-            }, 1000)
+      treeSure.onclick = function() {
+          treeMask.style.display = 'none';
+          function canMove(){
+              for(var j = 0; j < cIdArr.length; j++) {
+                  if(treeid == cIdArr[j]) {
+                      return false
+                  }
+              }
+              return true
           }
-          break
-        } else {
-          treeSure.onclick = contextmenuCallback.stickFile
-        }
+          if(!canMove()) {
+              notThis.style.display = 'block';
+              setTimeout(function() {
+                notThis.style.display = 'none';
+              }, 1000)
+          } else {
+              contextmenuCallback.stickFile();
+          }
       };
     })
-    //  向要粘贴的数组里push进我要复制的
     stickArr = [];
-    stickArr.push({
-      id:selectedLi.item.id,
-      pid:selectedLi.item.pid,
-      type:selectedLi.item.type,
-      name:selectedLi.item.name,
-      extname:selectedLi.item.extname
-    });
+    for(var i=0;i<stickLi.length;i++) {
+      stickArr.push({
+        id:stickLi[i].item.id,
+        pid:stickLi[i].item.pid,
+        type:stickLi[i].item.type,
+        name:stickLi[i].item.name,
+        extname:stickLi[i].item.extname
+      })
+    }
     view(_ID);
     treeCancel.onclick = function() {
       treeMask.style.display = 'none';
@@ -418,65 +503,75 @@ var contextmenuCallback = {
   },
   moveFile: function() {
     showTree();
-    var treeli = tree.querySelectorAll('li');
-    for (var i = 0; i < treeli.length; i++) {
-      treeli[i].onclick = function() {
-        for (var j = 0; j < treeli.length; j++) {
-          treeli[j].className = ''
-        }
-        this.className = 'active';
-        //  获取我当前点击的树里面那个的对应文件的id
-        var treeid = parseInt(this.attributes["treeid"].nodeValue);
-        treeClick = treeid;
-        var cId = selectedLi.item.id;
-        var cIdChild = getTree(cId);
-        var cIdParents = getParents(cId);
-        var cIdArr = [];
-        var cIdArr2 = [];
-        cIdArr2.push(cId);
-        for (var i = 0; i < cIdChild.length; i++) {
-          cIdArr.push(cIdChild[i].id)
-        }
-        for (var i = 0; i < cIdParents.length; i++) {
-          cIdArr2.push(cIdParents[i].id)
-        }
-        cIdArr = cIdArr2.concat(cIdArr);
-        //  不能移动到自身或者子级下面
-        for (var j = 0; j < cIdArr.length; j++) {
-          if (treeid == cIdArr[j]) {
-            treeSure.onclick = function() {
-              treeMask.style.display = 'none';
+    //  向要粘贴的数组里push进我要复制的
+    stickLi = [];
+    var cIdChild = [];
+    var cIdParents = [];
+    var cIdArr = [];
+    //  获取所有父级子级的id，不让他复制到其自身或自己下面
+    stickLi = $('.liActive').each(function(index,element) {
+        cIdArr.push(element.item.id);
+        return element
+    })
+    for(var i=0;i<stickLi.length;i++) {
+      (getTree(stickLi[i].item.id)).forEach(function(elements) {
+        cIdChild.push(elements.id);
+      });
+      (getParents(stickLi[i].item.id)).forEach(function(elements) {
+        cIdParents.push(elements.id);
+      });
+    }
+    cIdArr = cIdArr.concat(cIdChild.concat(cIdParents));
+    //  结构树点击效果
+    $('#tree li').on('click',function() {
+      $('#tree li').removeClass('active');
+      $(this).addClass('active');
+      //  获取我当前点击的树里面那个的对应文件的id
+      var treeid = parseInt(this.attributes["treeid"].nodeValue);
+      treeClick = treeid;
+      //  不能复制到自身或者子级下面
+      treeSure.onclick = function() {
+          treeMask.style.display = 'none';
+          function canMove(){
+              for(var j = 0; j < cIdArr.length; j++) {
+                  if(treeid == cIdArr[j]) {
+                      return false
+                  }
+              }
+              return true
+          }
+          if(!canMove()) {
               notThis.style.display = 'block';
               notThis.style.backgroundImage = 'url(img/cloud/movealert.png)';
               setTimeout(function() {
                 notThis.style.display = 'none';
               }, 1000)
-            }
-            break
           } else {
-            selectedLi.item.pid = -2;
-            treeSure.onclick = contextmenuCallback.stickFile
+              for(var i=0;i<stickLi.length;i++) {
+                  stickLi[i].item.pid = -2
+              }
+              contextmenuCallback.stickFile();
           }
-        };
       };
+    })
+    stickArr = [];
+    for(var i=0;i<stickLi.length;i++) {
+      stickArr.push({
+        id:stickLi[i].item.id,
+        pid:stickLi[i].item.pid,
+        type:stickLi[i].item.type,
+        name:stickLi[i].item.name,
+        extname:stickLi[i].item.extname
+      })
     }
+    view(_ID);
     treeCancel.onclick = function() {
       treeMask.style.display = 'none';
     }
-    //  向要粘贴的数组里push进我要复制的
-    stickArr = [];
-    stickArr.push({
-      id:selectedLi.item.id,
-      pid:selectedLi.item.pid,
-      type:selectedLi.item.type,
-      name:selectedLi.item.name,
-      extname:selectedLi.item.extname
-    });
-    view(_ID);
   },
   stickFile:function () {
       treeMask.style.display = 'none';
-      stickFile(stickArr[0]);
+      stickFile(stickArr);
   },
   deleteAbsolute:function() {
     notChoseAll();
@@ -484,9 +579,10 @@ var contextmenuCallback = {
     view(_ID)
     var lis = list.querySelectorAll('li');
     if (lis.length == 0) {
-      cannotChose()
+        choseAll.checked=false;
+        cannotChose()
     } else {
-      canChose()
+        canChose()
     }
   },
   restore:function() {

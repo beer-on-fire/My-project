@@ -9,6 +9,12 @@ figure {
 	outline:none;
 	vertical-align: top;
 }
+html,
+body {
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+}
 strong {
   font-style:none;
   font-weight: normal;
@@ -69,6 +75,10 @@ ul {
   color:#424e67;
   margin:0 15px;
   height:32px;
+}
+#header #logWrap2 a {
+ 	float:left;
+	margin:0 10px;
 }
 #header .headerRight span {
   float:left;
@@ -741,4 +751,101 @@ ul {
 	left:50%;
 	margin: -180px 0 0 -60px;
 	display:none;
+}
+
+/*登录框*/
+#logInMask {
+	display:none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background:url(../img/bg/lonely.jpg) no-repeat;
+	background-size: cover;
+	z-index:999999;
+}
+#logInMask .logo {
+	width:167px;
+	height:36px;
+	background: url(../img/bg/logo.png) no-repeat;
+	position:absolute;
+	left:25px;
+	top:20px;
+}
+#logInWrap {
+	width:352px;
+	height:398px;
+	background: url(../img/cloud/logInWrap.png) no-repeat;
+	position:absolute;
+	right:120px;
+	bottom:140px;
+}
+#logText {
+	width:312px;
+	height:84px;
+	border:1px solid #ccc;
+	border-radius: 4px;
+	position:absolute;
+	left:20px;
+	top:88px;
+}
+#logText input {
+	width:312px;
+	height:42px;
+	border:none;
+	background:#faffbd;
+	border-radius: 4px;
+	padding:0 10px;
+	box-sizing: border-box;
+}
+#logText input:nth-of-type(1) {
+	border-bottom:1px solid #ccc;
+	border-radius: 4px 4px 0 0;
+}
+#logInWrap label {
+	position: absolute;
+	top:193px;
+	left:20px;
+	font:12px/1 '微软雅黑'
+}
+#logInWrap button {
+	width:312px;
+	height:41px;
+	position: absolute;
+	top:229px;
+	left:20px;
+	font:12px/1 '微软雅黑';
+	background: url(../img/cloud/logInSure.png) no-repeat;
+	border:none;
+}
+#logInWrap .logInalert {
+	position: absolute;
+	top:70px;
+	left:20px;
+	font:12px/1 '微软雅黑';
+	color:red;
+}
+#logWrap {
+	float:left;
+	width:156px;
+	height:34px;
+	background: url(../img/cloud/lonearrow.png) no-repeat;
+	display: none;
+}
+.logMessage {
+	width:240px;
+	height:312px;
+	background: url(../img/cloud/logMessage.png) no-repeat;
+	position: absolute;
+	top:70px;
+	right:260px;
+	z-index:9;
+	display: none;
+}
+#logWrap2 {
+	float:left;
+}
+#logWrap2 #logIn {
+	color:#f60;
 }

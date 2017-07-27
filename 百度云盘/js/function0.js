@@ -176,38 +176,37 @@ function view(pid) {
 				var newNode = null;	//	克隆出来的新节点
 				var activeNodes = null;// 选中的文件
 				var self = this;//	我当前按下的这个文件
+				var cloneEls = [];//克隆的元素的集合
+				var startElOffset = [];//	元素初始位置
 				var startX = e.clientX;
 				var startY = e.clientY;
-				var muchFile = document.createElement('p');
-				var howMuch = document.createElement('span');
-				howMuch.style.width = muchFile.style.height ='14px';
-				muchFile.style.width = muchFile.style.height ='32px';
-				muchFile.style.position = 'fixed';
-				howMuch.style.position = 'absolute';
-				muchFile.style.background = 'url(img/cloud/muchFile.png)';
-				howMuch.style.right = 0;
-				howMuch.style.bottom = 0;
-				howMuch.style.color = 'white';
 				document.onmousemove = function(e) {
 					if(!newNode) {
 						activeNodes = list.querySelectorAll('.liActive');
-						howMuch.innerHTML = activeNodes.length;
 						for(var i=0;i<activeNodes.length;i++) {
-							muchFile.appendChild(howMuch)
-							list.appendChild(muchFile);
+							var rect = activeNodes[i].getBoundingClientRect();
+							var cloneNode = activeNodes[i].cloneNode(true);
+							css(cloneNode,'opacity',50);
+							cloneNode.style.position = 'fixed';
+							cloneEls.push(cloneNode);
+							list.appendChild(cloneNode);
 							if(self == activeNodes[i]) {
-								newNode = muchFile;
+								newNode = cloneNode;
 							}	//	判断是否有克隆
-							css(muchFile,'left',startX);
-							css(muchFile,'top',startY);
+							startElOffset.push({x:rect.left,y:rect.top}); //获取各个元素初始位置
+							css(cloneEls[i],'left',startElOffset[i].x);
+							css(cloneEls[i],'top',startElOffset[i].y);
 						}
 					}
-					css(muchFile,'left',e.clientX);
-					css(muchFile,'top',e.clientY);
+					var disX = e.clientX - startX;
+					var disY = e.clientY - startY;
+					for(var i=0;i<cloneEls.length;i++) {
+						css(cloneEls[i],'left',disX +startElOffset[i].x);
+						css(cloneEls[i],'top',disY +startElOffset[i].y);
+					}
 				};
 				document.onmouseup = function(e) {
 					document.onmousemove = null;
-					notChoseAll()
 					if(!newNode){
 						return;
 					}
@@ -224,7 +223,10 @@ function view(pid) {
 						}
 					}
 					//	鼠标抬起，移除克隆的
-					view(_ID);
+					for(var i=0;i<cloneEls.length;i++) {
+						list.innerHTML = '';
+						view(_ID)
+					}
 				}
 			}
 		}
