@@ -2,6 +2,7 @@
 * {
     margin:0;
     padding:0;
+    outline: none;
 }
 .spirit {
     position:relative;
@@ -55,30 +56,75 @@
 }
 
 /*首页*/
-#indexTop {
+.indexTop {
     width: 7.5rem;
     height:7.6rem;
-    background: url(../img/indexImg/girlFoot.png) no-repeat;
     background-size: cover;
 }
-#indexBottom {
+.indexBottom {
     width: 100%;
     height: 3.09rem;
     padding-top:1.07rem;
-    background: #f6f6f6 url(../img/indexImg/top1.png) no-repeat .51rem .66rem;
+    background: #f6f6f6;
     position: relative;
 }
-#indexBottom p {
+.topNub {
+    font: .3rem/.66rem '微软雅黑';
+    color: #ffb300;
+    position: absolute;
+    top:.45rem;
+    left:.51rem;
+}
+.indexBottom p {
     font: .44rem/.66rem '微软雅黑';
     color:#666;
     margin-left: .51rem;
     width:6.03rem;
 }
-#indexBottom span {
+.indexBottom p:nth-of-type(2) {
+    font: .33rem/.66rem '微软雅黑';
+    color:#666;
+    margin-left: .51rem;
+    width:6.03rem;
+}
+.lightNub {
     position: absolute;
     bottom: .5rem;
     right: .5rem;
     width: 2.27rem;
     height: .32rem;
-    background: url(../img/indexImg/lightNub.png) no-repeat;
+}
+.bigGood {
+    margin-top:.2rem;
+    width:7.5rem;
+    height: 7.47rem;
+}
+#timeline {
+    width: .8rem;
+    height:.8rem;
+    background:none;
+    border:none;
+    position:absolute;
+    top:.44rem;
+    right:.44rem;
+    z-index:1;
+}
+.mask {
+    position:fixed;
+    left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background:url(../img/indexImg/mask.png);
+	background-size: cover;
+	z-index:999999;
+}
+#closeMask {
+    width: .8rem;
+    height:.8rem;
+    background:none;
+    border:none;
+    position:absolute;
+    bottom:.2rem;
+    left:3.35rem;
 }
