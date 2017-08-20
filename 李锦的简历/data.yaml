@@ -1,0 +1,159 @@
+---
+update_time: '2017.2.24'
+name: 李锦
+meta_content: 应届毕业生，前端进阶中
+keywords: coderLijin,前端,工作,简历
+ga_id: 'UA-92595311-1'
+age: 23岁
+gender: 男
+school: 福建师范大学
+profession: 物流管理
+grade: 应届毕业生
+english_level: CET-4
+blog: http://lonelyarrow.site/
+github: https://github.com/beer-on-ice
+website:
+online: https://github.com/beer-on-ice/Resume/
+print: https://github.com/beer-on-ice/Resume/print.html
+apply_to_position: Web前端实习生
+contact: # 联系方式
+  -
+    icon: fa-envelope
+    name: Email
+    value: li997477295@outlook.com
+  -
+    icon: fa-qq
+    name: QQ
+    value: '997477295'
+  -
+    icon: fa-phone-square
+    name: PhoneNumber
+    value: '18506124204'
+honor: # 奖项荣誉
+  -
+    date: 2014.11 考取"物流师"证书
+
+  -
+    date: 2016.4  考取"外贸单证员"证书
+
+  -
+    date: 2015.10  考取"全国计算机等级二级"证书
+
+  -
+    date: 2014.3  考取"全国计算机等级一级"证书
+tech: # 技能点
+  -
+    name: HTML/CSS
+    percentage: 80%
+  -
+    name: JavaScript
+    percentage: 70%
+  -
+    name: Vue
+    percentage: 70%
+  -
+    name: Git
+    percentage: 60%
+  -
+    name: Node.js
+    percentage: 40%
+experience: # 项目经验
+  -
+    section: 个人项目
+    project:
+      -
+        name: 仿百度云盘
+        date:
+        img:
+        website:
+        source_code: https://github.com/beer-on-ice/My-project/tree/master/baiduYun
+        des: !!md |
+          自己用来熟练javascript的项目，以及习惯利用数据生成，而非在html结构中写定数据，方便修改添加，实现的功能主要是在复制，移动，框选，拖拽，上传文件，打开播放媒体文件等,具体信息在我的[个人博客](http://lonelyarrow.site/2017/07/30/%E7%99%BE%E5%BA%A6%E4%BA%91%E7%9B%98/);
+      -
+        name: 仿网易云客户端
+        date:
+        img:
+        website:
+        source_code: https://github.com/beer-on-ice/My-project/tree/master/NeteaseCloudMusic
+        des: !!md |
+          此项目主要用来锻炼自己处理前端工作中跨域访问，以及浏览器本地存储的读取和使用，也使自己对前后端的交流有了一定的了解，实现的功能主要有搜搜歌曲，添加收藏，媒体文件各类调节，具体可看[个人博客](http://lonelyarrow.site/2017/08/10/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90/);
+      -
+        name: 仿飞猪
+        date:
+        img:
+        website:
+        source_code: https://github.com/beer-on-ice/My-project/tree/master/feizhu
+        des: !!md |
+          此项目是用来练习自己写移动端页面的能力，基本处理了轮播图，轮播图拖拽，上下滑屏，滑屏的缓冲，滑屏的界限，详细信息可见[个人博客](http://lonelyarrow.site/2017/08/02/%E9%A3%9E%E7%8C%AA/);
+      -
+        name: 仿VelteMedia
+        date:
+        img:
+        website:
+        source_code: https://github.com/beer-on-ice/My-project/tree/master/VelteMedia
+        des: !!md |
+          此项目是纯css3+html5 ，主要是一个响应式页面，具体可见[个人博客](http://lonelyarrow.site/2017/08/02/VelteMedia/);
+  -
+    section: Demo
+    project:
+      -
+        name: 3d翻转效果
+        date:
+        img: http://ouzg16u5n.bkt.clouddn.com/mobile-demo1.png
+        website: http://lonelyarrow.site/showMyWeb/mobile-demo1/
+        source_code:
+        des: !!md |
+          这是一个3d效果的小demo，主要用css3来实现这样的效果,用transform-style 属性，使被转换的子元素保留其 3D 转换来实现这样的效果。
+      -
+        name: 3d盒子
+        date:
+        img: http://ouzg16u5n.bkt.clouddn.com/mobile-demo2.png
+        website: http://lonelyarrow.site/showMyWeb/anta/
+        source_code:
+        des: !!md |
+          这是一个3d效果的小demo，首先必不可少的perspective属性，决定了所看到的是2D transform还是3D transform。其次是变形元素，主要进行transform、transform-origin、backface-visibility等属性的设置
+      -
+        name: 安踏体育
+        date:
+        img: http://ouzg16u5n.bkt.clouddn.com/anta.png
+        website: https://www.taldumande.org.au/
+        source_code:
+        des: !!md |
+          此demo应用到了拖拽，还有手机重力感应，在移动端的应用十分广泛，当浏览器的Orientation发生变化时，触发DeviceOrientation事件，并返回一个DeviceOrientationEvent对象alpha、beta、gamma，利用beta和gamma值来展示屏幕的旋转方向和侧翻方向。但要实现更精确的物体判断，还需要复杂的算法来计算。
+      -
+        name: 轮播图
+        date:
+        img: http://ouzg16u5n.bkt.clouddn.com/scroll.png
+        website: http://lonelyarrow.site/showMyWeb/scroll/
+        source_code:
+        des: !!md |
+          实现图片轮播的思路有很多种，此项目是将已经移动过去的项目通过数组方法的push(),shift(),pop(),unshift()相结合，将将已经动画完成的图片移除，并再次添加到数组的最后一位，已达到轮播的效果，要达到轮播效果，还可以通过放多组图片后在临界的地方进行判断。
+      -
+        name: vue全选和反选
+        date:
+        img: http://ouzg16u5n.bkt.clouddn.com/vue-demo3.png
+        website: http://lonelyarrow.site/showMyWeb/vue-demo3/
+        source_code:
+        des: !!md |
+          此demo重点在于只要用v-model双向绑定input的checked值，在每个选项勾选时，遍历一下所有选项的checked,将是true的都放到数组中，在长度和全部长度相等时，即勾选全选的按钮；而全选只要将全选选项值和所有单选的比较就可以了。
+skill: # 技能清单
+      -
+        des: !!md |
+          能够用 HTML + CSS 编写语义化的代码，完成较复杂的布局，[NeteaseCloudMusic](http://lonelyarrow.site/showMyWeb/css3_NeteaseCloudMusic/) ， [Apple](http://lonelyarrow.site/showMyWeb/css3_Apple/)
+      -
+        des: !!md |
+          能够用媒体查询针对不同的媒体类型定义不同的样式，以设置设计响应式的页面，[css3_jQuery](http://lonelyarrow.site/showMyWeb/css3_jQuery/) ， [VelteMedia](http://lonelyarrow.site/showMyWeb/VelteMedia/)
+      -
+        des: !!md |
+          能够用视口 + rem 完成简单的移动端布局 ，[buyPhone](http://lonelyarrow.site/showMyWeb/buyPhone/) ， [淘宝](http://lonelyarrow.site/showMyWeb/mobile_tabao/)
+      -
+        des: !!md |
+         能够使用javascript编写代码 ，制作动态页面效果，实现人机交互
+      -
+        des: !!md |
+         能够结合使用 jQuery / Bootstrap / Vue  等框架，[vue-demo1](http://lonelyarrow.site/showMyWeb/vue-demo1/) ， [vue-demo2](http://lonelyarrow.site/showMyWeb/vue-demo2/)
+      -
+       des: !!md |
+        了解 Git / Webpack / AJAX 等开发工具 ， 能搭建简单的后端环境
+
+---
