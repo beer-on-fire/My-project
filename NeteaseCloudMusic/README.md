@@ -7,7 +7,7 @@
 4. 音乐信息展示
 
 
-####[预览](http://i.imgur.com/sdrywdo.png)
+![image](1.png)
 
 ## 环境要求
 需要 NodeJS 6.0+ 环境
